@@ -2,10 +2,9 @@
 			
 			
 		<%  
-		String s=request.getParameter("id");  
-		int id=Integer.parseInt(s);  
-		InBoxService inboxService=new InBoxService();
-		InBoxModel mail=inboxService.getMailById(id);
+		if(request.getAttribute("inboxmail")!=null){
+		InBoxModel mail=(InBoxModel)request.getAttribute("inboxmail");
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String date=formatter.format(mail.getDate());
 		 
@@ -16,7 +15,9 @@
 		out.print("<p>Date :"+date+"</p>");
 		out.print("<p style='white-space: pre-line' >messsage <br><br>"+mail.getMessage()+"</p>");
 		
-	
+		}
+		else
+			out.print("Error in fetching");
 		
 		  
 		}catch(Exception e){e.printStackTrace();{}  

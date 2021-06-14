@@ -1,11 +1,10 @@
 		<%@ page import="java.sql.*,com.api.model.*,com.api.service.*,java.text.*"%>  
-		
-		
+			
+			
 		<%  
-		String s=request.getParameter("id");  
-		int id=Integer.parseInt(s);  
-		BinService binService=new BinService();
-		BinModel mail=binService.getMailById(id);
+		if(request.getAttribute("sentmail")!=null){
+		SentBoxModel mail=(SentBoxModel)request.getAttribute("sentmail");
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String date=formatter.format(mail.getDate());
 		 
@@ -16,7 +15,9 @@
 		out.print("<p>Date :"+date+"</p>");
 		out.print("<p style='white-space: pre-line' >messsage <br><br>"+mail.getMessage()+"</p>");
 		
-	
+		}
+		else
+			out.print("Error in fetching");
 		
 		  
 		}catch(Exception e){e.printStackTrace();{}  

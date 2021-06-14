@@ -149,7 +149,7 @@ request.setAttribute("Error1","Plz Do login First");
 
 		function viewSentMail(id)
 		{
-			$.ajax({url: "GetSentMail.jsp?id="+id, success: function(result){
+			$.ajax({url: "getSentBoxMail?id="+id, success: function(result){
 				
 				document.getElementById("viewSentBoxMail").innerHTML=result
     	}

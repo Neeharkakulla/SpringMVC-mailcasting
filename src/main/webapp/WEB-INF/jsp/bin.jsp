@@ -145,7 +145,7 @@
 		function viewBinMail(id)
 		{
 			
-			$.ajax({url: "GetBinMail.jsp?id="+id, success: function(result){
+			$.ajax({url: "getBinMail?id="+id, success: function(result){
 				
 				document.getElementById("viewBinBoxMail").innerHTML=result
     	}

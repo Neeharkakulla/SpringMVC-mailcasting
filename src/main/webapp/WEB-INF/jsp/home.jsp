@@ -131,7 +131,7 @@
 
 		function viewMail(id)
 		{
-			$.ajax({url: "GetInBoxMail.jsp?id="+id, success: function(result){
+			$.ajax({url: "getInBoxMail?id="+id, success: function(result){
 				
 				document.getElementById("viewInBoxMail").innerHTML=result
     	}
@@ -144,14 +144,4 @@
 </script>
 	
 
-
-
-
-<!-- 					  
-							
-	
-		
-		}
-		}catch(Exception e){e.printStackTrace();{}-->
-		
 		
