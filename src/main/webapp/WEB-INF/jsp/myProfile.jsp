@@ -40,8 +40,9 @@
 			out.print("<font style='color:navy'>"+delete+"</font>");
 			}
 			try {
+				RegisterUser registerService=new RegisterUser();
 				
-				UserModel user=RegisterUser.getUserByEmail(username);
+				UserModel user=registerService.getUserByEmail(username);
 				String success=(String)request.getAttribute("success");	
 				
 				

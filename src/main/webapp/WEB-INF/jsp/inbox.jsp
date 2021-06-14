@@ -10,7 +10,9 @@
 			out.print("<font style='color:navy'>"+delete+"</font>");
 			}
 			try {
-				List<InBoxModel> mails=InBoxService.getAllMailsByEmail(username);
+				InBoxService inboxService=new InBoxService();
+				
+				List<InBoxModel> mails=inboxService.getAllMailsByEmail(username);
 				if(mails.size()>0){
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				

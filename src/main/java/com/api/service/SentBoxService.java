@@ -13,7 +13,7 @@ import com.api.model.SentBoxModel;
 
 public class SentBoxService {
 	
-	public static int deleteById(int id) {
+	public  int deleteById(int id) {
 		try{
 			Connection con=DBConnection.getCon();
 			PreparedStatement ps=con.prepareStatement("delete  from SENTBOX where id=?");
@@ -27,7 +27,7 @@ public class SentBoxService {
 		return 0;
 		}
 	
-	public static List<SentBoxModel> getAllMailsByEmail(String email){
+	public  List<SentBoxModel> getAllMailsByEmail(String email){
 		List<SentBoxModel> list=new ArrayList<>();
 		try {
 			Connection con= DBConnection.getCon();
@@ -51,7 +51,7 @@ public class SentBoxService {
 		}
 		return null;
 	}
-	public static SentBoxModel getMailById(int id) {
+	public  SentBoxModel getMailById(int id) {
 		SentBoxModel mail=null;
 		try {
 			Connection con=DBConnection.getCon();
@@ -75,7 +75,7 @@ public class SentBoxService {
 		
 	}
 
-	public static void retriveMail(SentBoxModel mail) {
+	public  void retriveMail(SentBoxModel mail) {
 		try {
 			Connection con=DBConnection.getCon();
 			PreparedStatement ps=con.prepareStatement("Insert into SENTBOX(reciever,sender,message,date,subject) values(?,?,?,?,?)");

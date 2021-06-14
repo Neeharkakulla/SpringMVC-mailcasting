@@ -1,65 +1,79 @@
 package com.api.controller;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.api.model.UserModel;
 import com.api.service.BinService;
+import com.api.service.InBoxService;
 import com.api.service.RegisterUser;
 import com.api.service.SendMessage;
+import com.api.service.SentBoxService;
 import com.api.service.VerifyLogin;
 
 
 @Controller
 public class MailCastingController {
 	
+	@Autowired
+	BinService binService;
+	@Autowired
+	InBoxService inboxService;
+	@Autowired
+	SentBoxService sentboxService;
+	@Autowired
+	RegisterUser registerService;
+	@Autowired
+	VerifyLogin loginService;
+	@Autowired
+	SendMessage messageService;
+	
+	@RequestMapping(value="/index",method=RequestMethod.GET)
+	public ModelAndView showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("index");
+	}
+	
 	@RequestMapping(value="/login",method = RequestMethod.POST)
-	public void  hello(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+	public ModelAndView  login(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
 		String uname=request.getParameter("email");
 		String password=request.getParameter("password");
-		boolean status=VerifyLogin.checkLogin(uname,password);
+		
+		boolean status=loginService.checkLogin(uname,password);
 		if(status==true){
 			HttpSession session=request.getSession();
 			session.setAttribute("username",uname);
-			RequestDispatcher rd=request.getRequestDispatcher("home.jsp");
-			rd.include(request, response);
-
+			return new ModelAndView("home");
 		}
 		else{
-			String Error="Please check your EMail and Password";
+			String Error="Please check your Email and Password";
 			request.setAttribute("Error", Error);
-			
-			RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
-			rd.include(request, response);
-			
-		
+			return new ModelAndView("index");					
 		}
-
 	}
 	
 	@RequestMapping(value="/logout",method=RequestMethod.GET)
-	private void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private ModelAndView logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
 		HttpSession session=request.getSession(false);
 		session.invalidate();
 		request.setAttribute("logout","You have been sucessfully logged out");
-		RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
-		rd.forward(request,response);
+		return new ModelAndView("index");
 		
 	}
+	
 	@RequestMapping(value="/composeEmail",method=RequestMethod.POST)
-	private void composeEmail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private ModelAndView composeEmail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
 		HttpSession session=request.getSession(false);
@@ -71,56 +85,45 @@ public class MailCastingController {
 		String reciever=request.getParameter("reciever_id");
 		String msg=request.getParameter("message");
 		String sub=request.getParameter("subject");
-		int i=SendMessage.sendMsg(sender,reciever,sub,msg);
-		if(i>0){
-			
-			RequestDispatcher rd=request.getRequestDispatcher("home.jsp");
-			rd.include(request, response);
-		}
-		else{
-			
-			RequestDispatcher rd=request.getRequestDispatcher("compose.jsp");
-			rd.include(request, response);
-		}
+		int i=messageService.sendMsg(sender,reciever,sub,msg);
+		
+		if(i>0)
+			return new ModelAndView("home");
+		else
+			return new ModelAndView("compose");
 		
 		}
 	@RequestMapping(value="/validate",method=RequestMethod.POST)
-	private void validatePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private ModelAndView validatePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id=Integer.parseInt(request.getParameter("id"));
 		
 		String password=request.getParameter("password");
 	
 	
-		if(VerifyLogin.validatePassword(id,password)) {
+		if(loginService.validatePassword(id,password)) 
 			request.setAttribute("success", "success");
-			
-			RequestDispatcher rd=request.getRequestDispatcher("myProfile.jsp");
-			rd.include(request, response);
-		}
-		else {
+		else 
 			request.setAttribute("success", "Invalid");
-			RequestDispatcher rd=request.getRequestDispatcher("myProfile.jsp");
-			rd.include(request, response);
-		}
+
+		
+		return new ModelAndView("myprofile");
 		
 		
 	}
 	@RequestMapping(value="/newPasswordRequest",method=RequestMethod.POST)
-	private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int id=Integer.parseInt(request.getParameter("id"));
 		String password=request.getParameter("password");
-		if(VerifyLogin.changePassword(id,password)) {
+		if(loginService.changePassword(id,password)) {
 			request.setAttribute("newPassword", true);
-			request.setAttribute("sucsess", null);
-			RequestDispatcher rd=request.getRequestDispatcher("myProfile.jsp");
-			rd.include(request, response);
-			
+			request.setAttribute("sucsess", null);	
 		}
 		
+		return new ModelAndView("myprofile");
 	}
 
 	@RequestMapping(value="/register",method=RequestMethod.POST)
-	private void registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private ModelAndView registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
 		String email=request.getParameter("email");
@@ -134,36 +137,33 @@ public class MailCastingController {
 		
 		UserModel user=new UserModel(email, password, name, gender, contact, country);
 		
-		int status=RegisterUser.register(user);
-		if(status>0){
+		if(registerService.register(user)>0){
 			String register= "You are Successfully registered";
 			request.setAttribute("register",register);
-			RequestDispatcher rd=request.getRequestDispatcher("/index.jsp");
-			rd.include(request, response);
+			return new ModelAndView("index");
 		}
-		else{
+		else
+		{
 			String registererror="Sorry,Registration failed. please try later";
 			request.setAttribute("registererror",registererror);
-			RequestDispatcher rd=request.getRequestDispatcher("Register.jsp");
-			rd.include(request, response);
-		
-		
-	}
+			return new ModelAndView("Register");
+		}
 	}
 	@RequestMapping(value="/retriveMail",method=RequestMethod.GET)
-	private void retriveFromBin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id=Integer.parseInt(request.getParameter("id"));
-			String type=BinService.retriveFromBin(id);
-			if(type.equalsIgnoreCase("inbox")) {
-			RequestDispatcher rd=request.getRequestDispatcher("home.jsp");
-			rd.forward(request, response);
-			}
-			if(type.equalsIgnoreCase("sentbox")) {
-				RequestDispatcher rd=request.getRequestDispatcher("sent.jsp");
-				rd.forward(request, response);
-				}
+	private ModelAndView retriveFromBin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+			int id=Integer.parseInt(request.getParameter("id"));
+			
+			String type=binService.retriveFromBin(id);
+			
+			if(type.equalsIgnoreCase("inbox")) 
+				return new ModelAndView("home");
+			
+			if(type.equalsIgnoreCase("sentbox")) 
+				return new ModelAndView("sent");
+				
 		
-		
+			return new ModelAndView("index");
 		
 	}
 	

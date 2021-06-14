@@ -5,8 +5,8 @@ String s=request.getParameter("id");
 int id=Integer.parseInt(s);  
 
 try{  
-    
-SentBoxModel mail=SentBoxService.getMailById(id);
+	SentBoxService sentBoxService=new SentBoxService();
+SentBoxModel mail=sentBoxService.getMailById(id);
 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 String date=formatter.format(mail.getDate());
 out.print("<br><br><br><br>");

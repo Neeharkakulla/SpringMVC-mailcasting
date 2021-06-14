@@ -4,8 +4,8 @@
 		<%  
 		String s=request.getParameter("id");  
 		int id=Integer.parseInt(s);  
-	
-		BinModel mail=BinService.getMailById(id);
+		BinService binService=new BinService();
+		BinModel mail=binService.getMailById(id);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String date=formatter.format(mail.getDate());
 		 

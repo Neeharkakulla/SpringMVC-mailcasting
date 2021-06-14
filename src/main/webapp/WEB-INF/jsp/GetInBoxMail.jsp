@@ -4,8 +4,8 @@
 		<%  
 		String s=request.getParameter("id");  
 		int id=Integer.parseInt(s);  
-		
-		InBoxModel mail=InBoxService.getMailById(id);
+		InBoxService inboxService=new InBoxService();
+		InBoxModel mail=inboxService.getMailById(id);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String date=formatter.format(mail.getDate());
 		 

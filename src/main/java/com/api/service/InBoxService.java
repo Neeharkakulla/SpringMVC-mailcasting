@@ -13,7 +13,7 @@ import com.api.model.InBoxModel;
 
 public class InBoxService {
 
-	public static int deleteById(int id) {
+	public  int deleteById(int id) {
 		try{
 			Connection con=DBConnection.getCon();
 			PreparedStatement ps=con.prepareStatement("delete  from INBOX where id=?");
@@ -26,7 +26,7 @@ public class InBoxService {
 		}
 		return 0;
 	}
-	public static List<InBoxModel> getAllMailsByEmail(String email){
+	public  List<InBoxModel> getAllMailsByEmail(String email){
 		List<InBoxModel> list=new ArrayList<>();
 		try {
 			Connection con= DBConnection.getCon();
@@ -46,7 +46,7 @@ public class InBoxService {
 		}
 		return null;
 	}
-	public static InBoxModel getMailById(int id) {
+	public  InBoxModel getMailById(int id) {
 		InBoxModel mail=null;
 		try {
 			Connection con=DBConnection.getCon();
@@ -69,7 +69,7 @@ public class InBoxService {
 		return mail;
 		
 	}
-	public static void retriveMail(InBoxModel mail) {
+	public  void retriveMail(InBoxModel mail) {
 		try {
 			Connection con=DBConnection.getCon();
 			PreparedStatement ps=con.prepareStatement("Insert into INBOX(reciever,sender,message,date,subject) values(?,?,?,?,?)");

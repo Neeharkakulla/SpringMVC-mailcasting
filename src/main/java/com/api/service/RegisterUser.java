@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import com.api.configuration.DBConnection;
 import com.api.model.UserModel;
 public class RegisterUser {
-static int status=0;
-public static int register(UserModel user){
+ int status=0;
+public  int register(UserModel user){
 	
 
 	
@@ -36,7 +36,7 @@ public static int register(UserModel user){
 	return status;
 	
 }
-public static UserModel getUserByEmail(String email) {
+public  UserModel getUserByEmail(String email) {
 	
 	try {
 		Connection con=DBConnection.getCon();

@@ -6,9 +6,9 @@ import java.util.Calendar;
 
 import com.api.configuration.DBConnection;
 public class SendMessage {
-static int status=0;
+ int status=0;
 
-public static int sendMsg(String sender,String reciever,String sub,String msg ){
+public  int sendMsg(String sender,String reciever,String sub,String msg ){
 	Connection con=DBConnection.getCon();
 	java.util.Date sqdate=Calendar.getInstance().getTime();
 	java.sql.Timestamp sqlTime=new java.sql.Timestamp(sqdate.getTime());

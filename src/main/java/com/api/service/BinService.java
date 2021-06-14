@@ -9,14 +9,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.api.configuration.DBConnection;
 import com.api.model.BinModel;
 import com.api.model.InBoxModel;
 import com.api.model.SentBoxModel;
 
 public class BinService {
+	@Autowired
+	InBoxService inboxService;
+	@Autowired
+	SentBoxService sentboxService;
 	
-	public static int deleteByBinId(int id) {
+	public  int deleteByBinId(int id) {
 		try{
 			Connection con=DBConnection.getCon();
 			PreparedStatement ps=con.prepareStatement("delete  from BIN where id=?");
@@ -30,7 +36,7 @@ public class BinService {
 		
 		return 0;
 	}
-	public static BinModel getMailById(int id) {
+	public  BinModel getMailById(int id) {
 		BinModel mail=null;
 		try {
 			
@@ -55,7 +61,7 @@ public class BinService {
 
 	}
 	
-	public static List<BinModel> getBinMailsByMailId(String email){
+	public  List<BinModel> getBinMailsByMailId(String email){
 		try {
 			
 			List<BinModel> list=new ArrayList<>();
@@ -78,7 +84,7 @@ public class BinService {
 		
 		return null;
 	}
-	public static int addInboxMailtoBin(int mailid) {
+	public  int addInboxMailtoBin(int mailid) {
 		
 		try {
 			Connection con=DBConnection.getCon();
@@ -87,7 +93,7 @@ public class BinService {
 					("insert into bin(type,mailid,usermail,reciever,sender,message,date,subject)"
 							+ " values(?,?,?,?,?,?,?,?)");
 			
-				InBoxModel mail=InBoxService.getMailById(mailid);
+				InBoxModel mail=inboxService.getMailById(mailid);
 				ps.setString(1, "inbox");
 				ps.setInt(2, mailid);
 				ps.setString(3, mail.getReciever());
@@ -96,7 +102,7 @@ public class BinService {
 				ps.setString(6, mail.getMessage());
 				ps.setTimestamp(7, mail.getDate());
 				ps.setString(8, mail.getSubject());
-				InBoxService.deleteById(mailid);
+				inboxService.deleteById(mailid);
 				
 			
 			return ps.executeUpdate();
@@ -109,7 +115,7 @@ public class BinService {
 		return 0;
 		
 	}
-	public static int addSentBoxMailtoBin(int mailid) {
+	public  int addSentBoxMailtoBin(int mailid) {
 		
 		try {
 			Connection con=DBConnection.getCon();
@@ -118,7 +124,7 @@ public class BinService {
 					("insert into bin(type,mailid,usermail,reciever,sender,message,date,subject)"
 							+ " values(?,?,?,?,?,?,?,?)");
 			
-			SentBoxModel mail=SentBoxService.getMailById(mailid);
+			SentBoxModel mail=sentboxService.getMailById(mailid);
 			
 			ps.setString(1, "sentbox");
 			ps.setInt(2, mailid);
@@ -128,7 +134,7 @@ public class BinService {
 			ps.setString(6, mail.getMessage());
 			ps.setTimestamp(7, mail.getDate());
 			ps.setString(8, mail.getSubject());
-			SentBoxService.deleteById(mailid);
+			sentboxService.deleteById(mailid);
 			return ps.executeUpdate();
 			
 		}
@@ -137,18 +143,19 @@ public class BinService {
 		}
 		return 0;
 	}
-	public static String retriveFromBin(int id) {
+	public  String retriveFromBin(int id) {
 		
-		BinModel mail=BinService.getMailById(id);
+		BinModel mail=getMailById(id);
 		if(mail.getType().equalsIgnoreCase("inbox")) {
-		InBoxService.retriveMail(new InBoxModel(mail.getReciever(),mail.getSender()
+		inboxService.retriveMail(new InBoxModel(mail.getReciever(),mail.getSender()
 				,mail.getMessage(),mail.getDate(),mail.getSubject()));
 		}
 		else if(mail.getType().equalsIgnoreCase("sentbox")) {
-			SentBoxService.retriveMail(new SentBoxModel(mail.getReciever(),mail.getSender()
+			sentboxService.retriveMail(new SentBoxModel(mail.getReciever(),mail.getSender()
 					,mail.getMessage(),mail.getDate(),mail.getSubject()));
 			}
-		BinService.deleteByBinId(id);
+		
+		deleteByBinId(id);
 		return mail.getType();
 	}
 }

@@ -9,8 +9,8 @@ if(id.length()>0){
 try{
 
 out.print("<br>");
-
-int res=BinService.deleteByBinId(Integer.parseInt(id));
+BinService binService=new BinService();
+int res=binService.deleteByBinId(Integer.parseInt(id));
 if(res>0)
 	out.print("Mail has been successfully deleted");
 else

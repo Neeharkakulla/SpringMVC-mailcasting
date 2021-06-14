@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import com.api.configuration.DBConnection;
 public class VerifyLogin {
 
-public static boolean checkLogin(String email,String password){
+public  boolean checkLogin(String email,String password){
 	boolean status=false;
 	Connection con=DBConnection.getCon();
 	try {
@@ -25,7 +25,7 @@ public static boolean checkLogin(String email,String password){
 	return status;
 }
 
-public static boolean validatePassword(int id, String password) {
+public  boolean validatePassword(int id, String password) {
 	Connection con=DBConnection.getCon();
 	try {
 		PreparedStatement ps=con.prepareStatement("Select * from MAILCASTINGUSER where id = ? and password =?");
@@ -41,7 +41,7 @@ public static boolean validatePassword(int id, String password) {
 	return false;
 }
 
-public static boolean changePassword(int id, String password) {
+public  boolean changePassword(int id, String password) {
 	Connection con=DBConnection.getCon();
 	try {
 		PreparedStatement ps=con.prepareStatement("UPDATE MAILCASTINGUSER SET password=? WHERE id =?");

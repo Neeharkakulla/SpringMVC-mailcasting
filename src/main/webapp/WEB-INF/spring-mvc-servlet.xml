@@ -3,8 +3,8 @@
    
     <context:component-scan base-package="com.api" />
     <context:annotation-config />
-    <!-- <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/jsp" />
+     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
-    </bean>-->
+    </bean>
 </beans>
