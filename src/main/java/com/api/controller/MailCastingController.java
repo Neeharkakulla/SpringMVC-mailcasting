@@ -94,9 +94,30 @@ public class MailCastingController {
 		if(i>0)
 			return showHome(request, response);
 		else
-			return new ModelAndView("compose");
+				return new ModelAndView("compose");
 		
 		}
+	
+	
+//Show Message
+	@RequestMapping(value="/getInBoxMail",method=RequestMethod.GET)
+	public ModelAndView getInboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+		request.setAttribute("inboxmail", inboxService.getMailById(Integer.parseInt(id)));
+		return new ModelAndView("GetInBoxMail");
+	}
+	@RequestMapping(value="/getSentBoxMail",method=RequestMethod.GET)
+	public ModelAndView getSentboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+		request.setAttribute("sentmail", sentboxService.getMailById(Integer.parseInt(id)));
+		return new ModelAndView("GetSentMail");
+	}
+	@RequestMapping(value="/getBinMail",method=RequestMethod.GET)
+	public ModelAndView geBinboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+		request.setAttribute("binmail", binService.getMailById(Integer.parseInt(id)));
+		return new ModelAndView("GetBinMail");
+	}
 	
 	
 //delete mails
