@@ -4,7 +4,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Calendar;
 
+import org.springframework.stereotype.Component;
+
 import com.api.configuration.DBConnection;
+
+
+@Component
 public class SendMessage {
  int status=0;
 

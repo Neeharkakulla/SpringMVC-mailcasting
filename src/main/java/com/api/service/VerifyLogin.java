@@ -5,7 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import com.api.configuration.DBConnection;
+
+
+@Component
 public class VerifyLogin {
 
 public  boolean checkLogin(String email,String password){

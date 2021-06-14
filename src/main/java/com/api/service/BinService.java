@@ -5,17 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.api.configuration.DBConnection;
 import com.api.model.BinModel;
 import com.api.model.InBoxModel;
 import com.api.model.SentBoxModel;
 
+@Component
 public class BinService {
 	@Autowired
 	InBoxService inboxService;

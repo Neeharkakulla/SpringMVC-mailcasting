@@ -5,8 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
 import com.api.configuration.DBConnection;
 import com.api.model.UserModel;
+
+
+@Component
 public class RegisterUser {
  int status=0;
 public  int register(UserModel user){

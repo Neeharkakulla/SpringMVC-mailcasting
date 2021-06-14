@@ -22,15 +22,17 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 			  <div class="navbar-nav">
-				<a class="nav-item nav-link active" href="home.jsp">Homepage<span class="sr-only">(current)</span></a>
-				<a class="nav-item nav-link" href="compose.jsp">Compose Mail</a>
-				<a class="nav-item nav-link" href="home.jsp">Inbox</a>
-				<a class="nav-item nav-link" href="sent.jsp">Sent</a>
-				<a class="nav-item nav-link" href="bin.jsp">Bin</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a class="nav-item nav-link" href="compose">Compose Mail</a>
+				<a class="nav-item nav-link" href="home">Inbox</a>
+				<a class="nav-item nav-link" href="sent">Sent</a>
+				<a class="nav-item nav-link" href="bin">Bin</a>
 				
 				<a class="nav-item nav-link" href="logout">LogOut</a>
-				<a class="nav-item nav-link" href="contactus.jsp">Contact Us</a>
-				<a class="nav-item nav-link" href="myProfile.jsp">Profile</a>
+				<a class="nav-item nav-link" href="contactus">Contact Us</a>
+				<a class="nav-item nav-link" href="myProfile">Profile</a>
 				
 			  </div>
 			</div>

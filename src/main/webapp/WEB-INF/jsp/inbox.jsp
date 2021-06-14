@@ -43,7 +43,7 @@
 				
 				out.print("<td>" + date + "</td>");
 				
-				out.print("<td><a href='deleteInboxMail.jsp?id="+m.getId() + "'> Delete</a></td>");
+				out.print("<td><a href='deleteInboxMail?id="+m.getId() + "'> Delete</a></td>");
 
 						out.print("</tr>");
 

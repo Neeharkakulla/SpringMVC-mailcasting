@@ -8,9 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
 import com.api.configuration.DBConnection;
 import com.api.model.InBoxModel;
 
+
+@Component
 public class InBoxService {
 
 	public  int deleteById(int id) {

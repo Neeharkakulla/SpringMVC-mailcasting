@@ -57,8 +57,9 @@
 							out.print("<font style='color:navy'>"+delete+"</font>");
 							}
 							try {
-								
-			List<BinModel> mails=BinService.getBinMailsByMailId(username);
+							
+			BinService binService=new BinService();					
+			List<BinModel> mails=binService.getBinMailsByMailId(username);
 			if(mails.size()>0){
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			
@@ -89,8 +90,8 @@
 			
 			out.print("<td>" +date + "</td>");
 			
-			out.print("<td><a href='deleteBinboxMail.jsp?id="+m.getId() + "'> Delete</a></td>");
-			out.print("<td><form><a href='retriveMail?id="+m.getId() + "'> Retrive</a></form></td>");
+			out.print("<td><a href='deleteBinboxMail?id="+m.getId() + "'> Delete</a></td>");
+			out.print("<td><a href='retriveMail?id="+m.getId() + "'> Retrive</a></td>");
 			out.print("</tr>");
 		
 		}

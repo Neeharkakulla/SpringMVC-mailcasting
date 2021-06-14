@@ -87,7 +87,7 @@ request.setAttribute("Error1","Plz Do login First");
 		
 		out.print("<td>" +date + "</td>");
 		
-		out.print("<td><a href='deleteSentboxMail.jsp?id="+m.getId() + "'> Delete</a></td>");
+		out.print("<td><a href='deleteSentboxMail?id="+m.getId() + "'> Delete</a></td>");
 
 		
 	

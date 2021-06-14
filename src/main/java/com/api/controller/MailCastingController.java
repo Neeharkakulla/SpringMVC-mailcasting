@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +21,7 @@ import com.api.service.SendMessage;
 import com.api.service.SentBoxService;
 import com.api.service.VerifyLogin;
 
-
+@ComponentScan(basePackages = {"com.api.services"})
 @Controller
 public class MailCastingController {
 	
@@ -41,7 +42,55 @@ public class MailCastingController {
 	public ModelAndView showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return new ModelAndView("index");
 	}
+	@RequestMapping(value="/home",method=RequestMethod.GET)
+	public ModelAndView showHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("home");
+	}
 	
+	@RequestMapping(value="/sent",method=RequestMethod.GET)
+	public ModelAndView showSentBox(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("sent");
+	}
+	
+	@RequestMapping(value="/compose",method=RequestMethod.GET)
+	public ModelAndView showCompose(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("compose");
+	}
+	
+	@RequestMapping(value="/contactus",method=RequestMethod.GET)
+	public ModelAndView showContactUs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("contactus");
+	}
+	@RequestMapping(value="/myProfile",method=RequestMethod.GET)
+	public ModelAndView showProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("myProfile");
+	}
+	@RequestMapping(value="/bin",method=RequestMethod.GET)
+	public ModelAndView showBin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("bin");
+	}
+	
+	@RequestMapping(value="/deleteSentboxMail",method=RequestMethod.GET)
+	public ModelAndView deleteSentboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+		binService.addSentBoxMailtoBin(Integer.parseInt(id));
+		return new ModelAndView("sent");
+	}
+	@RequestMapping(value="/deleteBinboxMail",method=RequestMethod.GET)
+	public ModelAndView deleteBinBoxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+		binService.deleteByBinId(Integer.parseInt(id));
+		return new ModelAndView("bin");
+	}
+	@RequestMapping(value="/deleteInboxMail",method=RequestMethod.GET)
+	public ModelAndView deleteinboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+
+		binService.addInboxMailtoBin(Integer.parseInt(id));
+		return new ModelAndView("home");
+	}
+	
+
 	@RequestMapping(value="/login",method = RequestMethod.POST)
 	public ModelAndView  login(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		
@@ -106,7 +155,7 @@ public class MailCastingController {
 			request.setAttribute("success", "Invalid");
 
 		
-		return new ModelAndView("myprofile");
+		return new ModelAndView("myProfile");
 		
 		
 	}
@@ -119,7 +168,7 @@ public class MailCastingController {
 			request.setAttribute("sucsess", null);	
 		}
 		
-		return new ModelAndView("myprofile");
+		return new ModelAndView("myProfile");
 	}
 
 	@RequestMapping(value="/register",method=RequestMethod.POST)
