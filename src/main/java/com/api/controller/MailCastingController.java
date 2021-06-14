@@ -136,7 +136,6 @@ public class MailCastingController {
 	@RequestMapping(value="/deleteInboxMail",method=RequestMethod.GET)
 	public ModelAndView deleteinboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id=request.getParameter("id");
-
 		binService.addInboxMailtoBin(Integer.parseInt(id));
 		return showHome(request, response);
 	}
