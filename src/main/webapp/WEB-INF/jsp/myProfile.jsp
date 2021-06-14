@@ -38,11 +38,16 @@
 			if(request.getAttribute("delete")!=null){
 			String delete=(String)session.getAttribute("username");		
 			out.print("<font style='color:navy'>"+delete+"</font>");
+		
+			}
+			
+			if(request.getAttribute("newPassword")!=null){
+				out.print("<span style='color:green'>Password Sucessfully Changed</span>");
 			}
 			try {
-				RegisterUser registerService=new RegisterUser();
 				
-				UserModel user=registerService.getUserByEmail(username);
+				
+				UserModel user=(UserModel)request.getAttribute("user");
 				String success=(String)request.getAttribute("success");	
 				
 				
