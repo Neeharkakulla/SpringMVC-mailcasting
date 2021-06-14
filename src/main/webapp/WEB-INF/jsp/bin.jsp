@@ -58,8 +58,8 @@
 							}
 							try {
 							
-			BinService binService=new BinService();					
-			List<BinModel> mails=binService.getBinMailsByMailId(username);
+						
+			List<BinModel> mails=(List<BinModel>)request.getAttribute("binmails");
 			if(mails.size()>0){
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			

@@ -55,8 +55,8 @@ request.setAttribute("Error1","Plz Do login First");
 	out.print("<font style='color:navy'>"+delete+"</font>");
 	}
 	try {
-		SentBoxService sentBoxService=new SentBoxService();			
-		List<SentBoxModel> mails=sentBoxService.getAllMailsByEmail(username);
+				
+		List<SentBoxModel> mails=(List<SentBoxModel>)request.getAttribute("sentmails");
 		if(mails.size()>0){
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
