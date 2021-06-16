@@ -11,3 +11,5 @@
 		<p>to : ${ mail.reciever} </p>
 		<p>Date : <fmt:formatDate type="both" dateStyle="short" timeStyle="short"  value="${mail.date}" /></p>
 		<p style='white-space: pre-line' >Message <br><br>${ mail.message}</p>
+
+		
