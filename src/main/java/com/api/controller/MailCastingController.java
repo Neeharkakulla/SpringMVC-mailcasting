@@ -100,21 +100,19 @@ public class MailCastingController {
 	
 //Show Message
 	@RequestMapping(value="/getInBoxMail",method=RequestMethod.GET)
-	public ModelAndView getInboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id=request.getParameter("id");
-		request.setAttribute("inboxmail", inboxService.getMailById(Integer.parseInt(id)));
+	public ModelAndView getInboxMail(@RequestParam("id") String id,Model m) {
+		
+		m.addAttribute("mail", inboxService.getMailById(Integer.parseInt(id)));
 		return new ModelAndView("GetInBoxMail");
 	}
 	@RequestMapping(value="/getSentBoxMail",method=RequestMethod.GET)
-	public ModelAndView getSentboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id=request.getParameter("id");
-		request.setAttribute("sentmail", sentboxService.getMailById(Integer.parseInt(id)));
+	public ModelAndView getSentboxMail(@RequestParam("id") String id,Model m) {
+		m.addAttribute("mail", sentboxService.getMailById(Integer.parseInt(id)));
 		return new ModelAndView("GetSentMail");
 	}
 	@RequestMapping(value="/getBinMail",method=RequestMethod.GET)
-	public ModelAndView geBinboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id=request.getParameter("id");
-		request.setAttribute("binmail", binService.getMailById(Integer.parseInt(id)));
+	public ModelAndView geBinboxMail(@RequestParam("id") String id,Model m) {
+		m.addAttribute("mail", binService.getMailById(Integer.parseInt(id)));
 		return new ModelAndView("GetBinMail");
 	}
 	
