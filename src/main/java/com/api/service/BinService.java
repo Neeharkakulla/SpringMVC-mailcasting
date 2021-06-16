@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.api.configuration.DBConnection;
 import com.api.model.BinModel;
 import com.api.model.InBoxModel;
 import com.api.model.SentBoxModel;
 
-@Component
+@Service
 public class BinService {
 	@Autowired
 	InBoxService inboxService;

@@ -1,3 +1,6 @@
+
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE HTML>
 
 
@@ -89,36 +92,29 @@
 
 									<h3 style="color:#007897;">Registration Form</h3><br>
 									<div>
-									<% 
-									if(request.getAttribute("registererror")!=null){
-									String msg=(String)request.getAttribute("registererror");
-									out.print("<font style='color:red'>"+msg);
-									out.print("</font><br/>");
-									}
-									%>
-									
-								<form action="register" method="post">
+																		
+								<form:form action="register" method="post" modelAttribute="user">
 									<table style="table-layout: fixed;">
 										<tr><td>EmailId:</td></tr>
-										<tr><td><input class="inputBox" type="text" name="email"/><br/><br/></td></tr>
+										<tr><td><form:input class="inputBox" path="email"/><br/><br/></td></tr>
 
 										<tr><td>Password: </td></tr>
-										<tr><td><input class="inputBox" type="password" name="password"/><br/><br/></td></tr>
+										<tr><td><form:password class="inputBox" path="password"/><br/><br/></td></tr>
 										<tr><td>Name: </td></tr>
-										<tr><td><input class="inputBox" type="text" name="name"/><br/><br/></td></tr>
+										<tr><td><form:input class="inputBox" path="name"/><br/><br/></td></tr>
 										
-										<tr><td>Gender: Male<input type="radio" name="gender" value="male">
-											Female<input type="radio" name="gender" value="female"/><br/><br/>
+										<tr><td>Gender: Male<form:radiobutton path="gender" value="male"/>
+											Female<form:radiobutton path="gender" value="female"/><br/><br/>
 											</td>
 										</tr>
 										<tr><td>Contact Number:</td></tr>
-										<tr><td> <input class="inputBox" type="text" name="contact"/><br/><br/></td></tr>
+										<tr><td> <form:input class="inputBox" path="contact"/><br/><br/></td></tr>
 										<tr><td>Country: </td></tr>
-										<tr><td><input class="inputBox" type="text" name="country"/><br/><br/></td></tr>
+										<tr><td><form:input class="inputBox" path="country"/><br/><br/></td></tr>
 										<tr><td><input type="submit" value="Submit" class="btn-signin"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-											<a href="index.jsp" class="btn-login">Login</a></td></tr>
+											<a href="index" class="btn-login">Login</a></td></tr>
 									</table>
-								</form>
+								</form:form>
 						
 							
 					

@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.api.configuration.DBConnection;
 import com.api.model.UserModel;
 
 
-@Component
+@Service
 public class UserService {
  int status=0;
 public  int register(UserModel user){

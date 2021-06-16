@@ -4,15 +4,21 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.api.model.SentBoxModel;
 import com.api.model.UserModel;
 import com.api.service.BinService;
 import com.api.service.InBoxService;
@@ -22,6 +28,7 @@ import com.api.service.UserService;
 
 @ComponentScan(basePackages = {"com.api.services"})
 @Controller
+@SessionAttributes("usermail")
 public class MailCastingController {
 	
 	@Autowired
@@ -37,38 +44,40 @@ public class MailCastingController {
 
 //Header Mapping	
 	@RequestMapping(value="/index",method=RequestMethod.GET)
-	public ModelAndView showIndex(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		return new ModelAndView("index");
+	public ModelAndView showIndex()  {
+		return new ModelAndView("index","user",new UserModel());
 	}
+	
 	@RequestMapping(value="/home",method=RequestMethod.GET)
-	public ModelAndView showHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		request.setAttribute("inboxmails", inboxService.getAllMailsByEmail((String)request.getSession(false).getAttribute("username")));
-		return new ModelAndView("home");
+	public ModelAndView showHome(@ModelAttribute("usermail") String usermail) {
+		return new ModelAndView("home","mails",inboxService.getAllMailsByEmail(usermail));
 	}
+	
 	@RequestMapping(value="/bin",method=RequestMethod.GET)
-	public ModelAndView showBin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		request.setAttribute("binmails", binService.getBinMailsByMailId((String)request.getSession(false).getAttribute("username")));
-		return new ModelAndView("bin");
+	public ModelAndView showBin(@ModelAttribute("usermail") String usermail) {
+		return new ModelAndView("bin","mails",binService.getBinMailsByMailId(usermail));
 	}
 	
 	@RequestMapping(value="/sent",method=RequestMethod.GET)
-	public ModelAndView showSentBox(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("sentmails", sentboxService.getAllMailsByEmail((String)request.getSession(false).getAttribute("username")));
-		return new ModelAndView("sent");
+	public ModelAndView showSentBox(@ModelAttribute("usermail") String usermail) {
+		return new ModelAndView("sent","mails",sentboxService.getAllMailsByEmail(usermail));
 	}
+	
 	@RequestMapping(value="/myProfile",method=RequestMethod.GET)
-	public ModelAndView showProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("user", userService.getUserByEmail((String)request.getSession(false).getAttribute("username")));
-		return new ModelAndView("myProfile");
+	public ModelAndView showProfile(@ModelAttribute("usermail") String usermail,Model m)  {
+		m.addAttribute("success","");
+		return new ModelAndView("myProfile","user",userService.getUserByEmail(usermail));
 	}
 	
 	@RequestMapping(value="/compose",method=RequestMethod.GET)
-	public ModelAndView showCompose(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		return new ModelAndView("compose");
+	public ModelAndView showCompose(@ModelAttribute("usermail") String usermail) {
+		return new ModelAndView("compose","mail",new SentBoxModel(usermail));
 	}
-	
+
+	@RequestMapping(value="/register-page",method=RequestMethod.GET)
+	public ModelAndView showRegisterPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return new ModelAndView("Register","user",new UserModel());
+	}
 	@RequestMapping(value="/contactus",method=RequestMethod.GET)
 	public ModelAndView showContactUs(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return new ModelAndView("contactus");
@@ -77,25 +86,15 @@ public class MailCastingController {
 	
 //send mail	
 	@RequestMapping(value="/composeEmail",method=RequestMethod.POST)
-	private ModelAndView composeEmail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		
-		HttpSession session=request.getSession(false);
+	private ModelAndView composeEmail(@ModelAttribute("usermail")String usermail,@ModelAttribute("mail")SentBoxModel mail)  {
 		
 		
-		String sender=(String)session.getAttribute("username");
-		
-		
-		String reciever=request.getParameter("reciever_id");
-		String msg=request.getParameter("message");
-		String sub=request.getParameter("subject");
-		int i=messageService.sendMsg(sender,reciever,sub,msg);
+		int i=messageService.sendMsg(mail);
 		
 		if(i>0)
-			return showHome(request, response);
+			return new ModelAndView("home","mails",inboxService.getAllMailsByEmail(usermail));
 		else
-				return new ModelAndView("compose");
-		
+				return new ModelAndView("compose","mail",new SentBoxModel(usermail));
 		}
 	
 	
@@ -122,41 +121,37 @@ public class MailCastingController {
 	
 //delete mails
 	@RequestMapping(value="/deleteSentboxMail",method=RequestMethod.GET)
-	public ModelAndView deleteSentboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id=request.getParameter("id");
+	public ModelAndView deleteSentboxMail(@ModelAttribute("usermail")String usermail,@RequestParam("id")String id) {
 		binService.addSentBoxMailtoBin(Integer.parseInt(id));
-		return showSentBox(request, response);
-	}
-	@RequestMapping(value="/deleteBinboxMail",method=RequestMethod.GET)
-	public ModelAndView deleteBinBoxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id=request.getParameter("id");
-		binService.deleteByBinId(Integer.parseInt(id));
-		return showBin(request, response);
+		return new ModelAndView("sent","mails",sentboxService.getAllMailsByEmail(usermail));
 	}
 	@RequestMapping(value="/deleteInboxMail",method=RequestMethod.GET)
-	public ModelAndView deleteinboxMail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id=request.getParameter("id");
+	public ModelAndView deleteinboxMail(@ModelAttribute("usermail")String usermail,@RequestParam("id")String id) {
 		binService.addInboxMailtoBin(Integer.parseInt(id));
-		return showHome(request, response);
+		return new ModelAndView("home","mails",inboxService.getAllMailsByEmail(usermail));
+
+	}
+	@RequestMapping(value="/deleteBinboxMail",method=RequestMethod.GET)
+	public ModelAndView deleteBinboxMail(@ModelAttribute("usermail")String usermail,@RequestParam("id")String id) {
+		binService.deleteByBinId(Integer.parseInt(id));
+		return new ModelAndView("bin","mails",binService.getBinMailsByMailId(usermail));
 	}
 
 	
 //retrive from bin
 	@RequestMapping(value="/retriveMail",method=RequestMethod.GET)
-	private ModelAndView retriveFromBin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-			int id=Integer.parseInt(request.getParameter("id"));
+	private ModelAndView retriveFromBin(@ModelAttribute("usermail")String usermail,@RequestParam("id")String id) {
 			
-			String type=binService.retriveFromBin(id);
+			String type=binService.retriveFromBin(Integer.parseInt(id));
 			
 			if(type.equalsIgnoreCase("inbox")) 
-				return showHome(request, response);
+				return new ModelAndView("home","mails",inboxService.getAllMailsByEmail(usermail));
 			
 			if(type.equalsIgnoreCase("sentbox")) 
-				return showSentBox(request, response);
+				return new ModelAndView("sent","mails",sentboxService.getAllMailsByEmail(usermail));
 				
 		
-			return new ModelAndView("index");
+			return new ModelAndView("index","user",new UserModel());
 		
 	}
 	
@@ -164,91 +159,72 @@ public class MailCastingController {
 		
 //User login/logout and register
 	@RequestMapping(value="/login",method = RequestMethod.POST)
-	public ModelAndView  login(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+	public ModelAndView  login(@ModelAttribute("user")UserModel user,Model m) {
 		
-		String uname=request.getParameter("email");
-		String password=request.getParameter("password");
 		
-		boolean status=userService.checkLogin(uname,password);
+		boolean status=userService.checkLogin(user.getEmail(),user.getPassword());
 		if(status==true){
-			HttpSession session=request.getSession();
-			session.setAttribute("username",uname);
-			return new ModelAndView("home");
+			m.addAttribute("usermail", user.getEmail());
+			return showHome(user.getEmail());
 		}
 		else{
 			String Error="Please check your Email and Password";
-			request.setAttribute("Error", Error);
-			return new ModelAndView("index");					
+			return new ModelAndView("index","serverMessage",Error);					
 		}
 	}
 	
 	@RequestMapping(value="/logout",method=RequestMethod.GET)
-	private ModelAndView logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		
-		HttpSession session=request.getSession(false);
-		session.invalidate();
-		request.setAttribute("logout","You have been sucessfully logged out");
-		return new ModelAndView("index");
+	private ModelAndView logOut(Model m,@ModelAttribute("usermail") String usermail, WebRequest request, SessionStatus status)  {
+		status.setComplete();
+	    request.removeAttribute("user", WebRequest.SCOPE_SESSION);
+			String Error="You have been sucessfully logged out";
+			m.addAttribute("serverMessage",Error);
+						
+			return new ModelAndView("index","user",new UserModel());
 		
 	}
 	
 	@RequestMapping(value="/register",method=RequestMethod.POST)
-	private ModelAndView registerUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
+	private ModelAndView registerUser(@ModelAttribute("user") UserModel user)  {
 		
-		String email=request.getParameter("email");
-		String password=request.getParameter("password");
-		String name=request.getParameter("name");
-		String gender=request.getParameter("gender");
-		
-		String contact=request.getParameter("contact");
-		
-		String country=request.getParameter("country");
-		
-		UserModel user=new UserModel(email, password, name, gender, contact, country);
 		
 		if(userService.register(user)>0){
 			String register= "You are Successfully registered";
-			request.setAttribute("register",register);
-			return new ModelAndView("index");
+			
+			return new ModelAndView("index","serverMessage",register);
 		}
 		else
 		{
 			String registererror="Sorry,Registration failed. please try later";
-			request.setAttribute("registererror",registererror);
-			return new ModelAndView("Register");
+			
+			return new ModelAndView("Register","serverMessage",registererror);
 		}
 	}
 	
 //password Change Request	
 	@RequestMapping(value="/validate",method=RequestMethod.POST)
-	private ModelAndView validatePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id=Integer.parseInt(request.getParameter("id"));
-		
-		String password=request.getParameter("password");
-	
-	
-		if(userService.validatePassword(id,password)) 
-			request.setAttribute("success", "success");
-		else 
-			request.setAttribute("success", "Invalid");
+	private ModelAndView validatePassword(Model m,@RequestParam("id")String id,@ModelAttribute("usermail") String usermail,@RequestParam("password")String password) {
 
-		
-		return showProfile(request, response);
+		if(userService.validatePassword(Integer.parseInt(id),password)) 
+			m.addAttribute("success", "success");
+		else 
+			m.addAttribute("success", "Invalid");
+
+		return new ModelAndView("myProfile","user",userService.getUserByEmail(usermail));
 		
 		
 	}
 	@RequestMapping(value="/newPasswordRequest",method=RequestMethod.POST)
-	private ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id=Integer.parseInt(request.getParameter("id"));
-		String password=request.getParameter("password");
-		if(userService.changePassword(id,password)) {
-			request.setAttribute("newPassword", "changed");
-			request.setAttribute("sucsess", null);	
-		}
+	private ModelAndView changePassword(Model m,@RequestParam("id")String id,@ModelAttribute("usermail") String usermail,@RequestParam("password")String password)  {
 		
-		return showProfile(request, response);
+		
+		if(userService.changePassword(Integer.parseInt(id),password)) {
+			m.addAttribute("newPassword", "Password SuccesFully Changed");
+			m.addAttribute("success","");	
+		}
+		return new ModelAndView("myProfile","user",userService.getUserByEmail(usermail));
+		
+	
 	}
 
 

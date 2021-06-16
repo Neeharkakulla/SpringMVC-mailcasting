@@ -1,6 +1,8 @@
-<%@page import="java.sql.*,com.api.model.*,com.api.service.*,java.util.*,java.text.*" %>
 
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
 <jsp:include page="header.jsp"></jsp:include>
 <style>
 .main{
@@ -23,6 +25,10 @@
 }
 
 </style>
+			<%
+				if(session.getAttribute("usermail")==null)
+					response.sendRedirect("index");
+			%>
 <div class="main">
 			<div class="main-col-1">
 				
@@ -31,95 +37,57 @@
 					</div>
 					
 							<div>
-									<% 	
-if(session.getAttribute("username")!=null){
-String username=(String)session.getAttribute("username");		
-out.print("");
-}
-else{
-request.setAttribute("Error1","Plz Do login First");
-%>
-<jsp:forward page="index.jsp"></jsp:forward>
-<%}
-%>
+	
 </div>
 <div>
+<h6>Welcome ${usermail}</h6>
+								<c:if test="${mails.size()<=0}">
+								<h5>Sentbox is empty</h5>
+								</c:if>		
+					<c:if test="${mails.size()>0}">
+					<h6>Sent Box</h6>
+					<table border=4 cellspacing='4' cellpadding='5'>
+		
+						<tr>
+						<td>Reciever&nbsp;	&nbsp;</td>
+						<td>SUBJECT</td><th>MESSAGE	&nbsp; 	&nbsp;</td>
+						<td>DATE OF RECIEVING 	&nbsp;	&nbsp;</td>
+						<td>Delete</td>
+						</tr>
+			<c:forEach var="m" items="${mails}">	
+		
+		
+		<tr onclick='viewSentMail(${m.id})'>
 
-<% 
+		<c:if test="${m.reciever.length()>=5}">
+			<td> ${ m.reciever.substring(0,5)}....</td>
+			</c:if>
+		<c:if test="${m.reciever.length()<5}">
+			<td>${ m.reciever} </td>
+		</c:if>
+		<c:if test="${m.subject.length()>=5}">
+			<td> ${ m.subject.substring(0,5)}....</td>
+			</c:if>
+		<c:if test="${m.subject.length()<5}">
+			<td> ${ m.subject}....</td>
+			</c:if>
+		<c:if test="${m.message.length()>=5}">
+			<td> ${ m.message.substring(0,5)}....</td>
+			</c:if>
+		<c:if test="${m.message.length()<5}">
+			<td> ${ m.subject}....</td>
+			</c:if>
+			
+		<td><fmt:formatDate type="both" dateStyle="short" timeStyle="short"  value="${m.date}" />  </td>
 		
-	if(session.getAttribute("username")!=null){
-	String username=(String)session.getAttribute("username");		
-	out.print("<font style='color:navy'>Welcome "+username+"</font><br><h5>Sent Box</h5>");
-	if(request.getAttribute("delete")!=null){
-	String delete=(String)session.getAttribute("username");		
-	out.print("<font style='color:navy'>"+delete+"</font>");
-	}
-	try {
-				
-		List<SentBoxModel> mails=(List<SentBoxModel>)request.getAttribute("sentmails");
-		if(mails.size()>0){
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
-		out.print("<div id='bottom'></div>");
-	
-		out.print("<table border=4 cellspacing='4' cellpadding='5'>");
-		out.print("<tr><td>Reciever&nbsp;	&nbsp;</td><td>SUBJECT</td><th>MESSAGE	&nbsp; 	&nbsp;</td><td>DATE OF RECIEVING 	&nbsp;	&nbsp;</td><td>Delete</td></tr>");
-		for(SentBoxModel m:mails){
-			int id=m.getId();
-		
-		String date=formatter.format(m.getDate());
-		out.print("<tr onclick='viewSentMail("+id+")'>");
+		<td><a href='deleteSentboxMail?id=${m.id}'> Delete</a></td>
 
-		if(m.getReciever().length()>=5)
-			out.print("<td>" + m.getReciever().substring(0,5) + "....</td>");
-		else
-			out.print("<td>" +m.getReciever() + "</td>");
-		
-		if(m.getSubject().length()>=5)
-			out.print("<td>" + m.getSubject().substring(0,5) + "....</td>");
-		else
-			out.print("<td>" + m.getSubject() + "</td>");
-
-		if(m.getMessage().length()>=5)
-			out.print("<td>" + m.getMessage().substring(0,5) + "......</td>");
-		else
-			out.print("<td>" + m.getMessage()+ "</td>");
-		
-		out.print("<td>" +date + "</td>");
-		
-		out.print("<td><a href='deleteSentboxMail?id="+m.getId() + "'> Delete</a></td>");
-
-		
-	
-		out.print("</tr>");
-	
-		}
-		out.print("</table>");
-		out.print("<table align='right'width='40%'>");
-	
-	
-		out.print("</table>");
-		}
-		else
-		{
-			out.print("Sentbox is empty");
-		}
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	}
-						
-						
-
-	else{
-	request.setAttribute("Error1","Plz Do login First");
-	%>
-	<jsp:forward page="index.jsp"></jsp:forward>
-	<%
-	
-	}
-	%>
-				
+	</tr>
+								
+								</c:forEach>
+								
+								</table>
+								</c:if>
 				
 				</div>
 </div>

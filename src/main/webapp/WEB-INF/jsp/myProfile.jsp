@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
 
-<%@ page import="java.sql.*,com.api.model.*,com.api.service.*,java.text.*,java.util.*"%>  
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
 <jsp:include page="header.jsp"></jsp:include>
 
 <style>
@@ -28,91 +28,75 @@
 	
 </style>
 <div class="main">
+	<%
+				if(session.getAttribute("usermail")==null)
+					response.sendRedirect("index");
+			%>
 	<div class="main-col-1"></div>	
 	<div class="main-col-2">
 	<br><br><br>						
-<%
-			if(session.getAttribute("username")!=null){
-			String username=(String)session.getAttribute("username");		
-			out.print("<h5>My Profile</h5>");
-			if(request.getAttribute("delete")!=null){
-			String delete=(String)session.getAttribute("username");		
-			out.print("<font style='color:navy'>"+delete+"</font>");
-		
-			}
-			
-			if(request.getAttribute("newPassword")!=null){
-				out.print("<span style='color:green'>Password Sucessfully Changed</span>");
-			}
-			try {
-				
-				
-				UserModel user=(UserModel)request.getAttribute("user");
-				String success=(String)request.getAttribute("success");	
-				
-				
-				out.print("<table border=4 cellspacing='4' cellpadding='5'>");
+				<span style="color:green">${newPassword }</span>
+				<table border=4 cellspacing='4' cellpadding='5'>
 				
 				
 				
-				out.print("<tr>");
-				out.print("<td>Name</td>");
-				out.print("<td>" +user.getName()+ "</td>");
-				out.print("</tr>");
+				<tr>
+				<td>Name</td>
+				<td>${user.name}</td>
+				</tr>
 				
-				out.print("<tr>");
-				out.print("<td>Email</td>");
-				out.print("<td>" + user.getEmail() + "</td>");
-				out.print("</tr>");
+				<tr>
+				<td>Email</td>
+				<td>${user.email}</td>
+				</tr>
+				<tr>
+				<td>Password</td>
+				<c:if test="${success.equals('success')}">
+				<td><span style='color: green;'>Success &#10003;</span></td>
+				</c:if>
+				<c:if test="${success.equals('Invalid')}">
+				<td> 
+				<form action='validate' method='post'>
+				<input type='hidden' name='id' value="${user.id }" readonly>
+				<input type='password' name='password'>&nbsp;&nbsp;
+				<button >Validate</button>
+				</form>
+				<span style='color: red;'>Invalid</span></td>
+				</c:if>
+				<c:if test="${success.equals('')}">
+				<td> 
+				<form action='validate' method='post'>
+				<input type='hidden' name='id' value="${user.id }" readonly>
+				<input type='password' name='password'>&nbsp;&nbsp;
+				<button >Validate</button>
+				</form>
+				</td>
+				</c:if>
+				</tr>
+				<c:if test="${success.equals('success')}">
+				<tr>
+				<td>New Password</td>
+				<td>
+				 <form action='newPasswordRequest' method='post'>
+					<input type='hidden' name='id' value="${user.id }" readonly>
+					<input type='password' name='password'>&nbsp;&nbsp;
+					<button >Change</button>
+				</form>
+				</td>
+				</tr>
+				</c:if>
 				
-				out.print("<tr>");
-				out.print("<td>Password</td>");
+				<tr>
+				<td>Contact</td>
+				<td>${user.contact}</td>
+				</tr>
 				
-				if((!(success==null))&&(success.equals("success")))
-					out.print("<td><span style='color: green;'>Success &#10003;</span></td>");
-				else if((!(success==null))&&(success.equals("Invalid")))
-					out.print("<td> <form action='validate' method='post'>"+
-							"<input type='hidden' name='id' value="+user.getId()+" readonly>"+
-							"<input type='password' name='password'>&nbsp;&nbsp;"+
-								"<button >Validate</button></form>"
-									+"<span style='color: red;'>Invalid</span></td>");
-				else if(success==null)
-					out.print("<td> <form action='validate' method='post'>"+
-				"<input type='hidden' name='id' value="+user.getId()+" readonly>"+
-				"<input type='password' name='password'>&nbsp;&nbsp;"+
-					"<button >Validate</button></form></td>");
-				out.print("</tr>");
-				if((!(success==null))&&(success.equals("success"))){
-				out.print("<tr>");
-				out.print("<td>New Password</td>");
-				out.print("<td> <form action='newPasswordRequest' method='post'>"+
-						"<input type='hidden' name='id' value="+user.getId()+" readonly>"+
-						"<input type='password' name='password'>&nbsp;&nbsp;"+
-							"<button >Change</button></form></td>");
-				out.print("</tr>");
-				}
-				out.print("<tr>");
-				out.print("<td>Contact</td>");
-				out.print("<td>" + user.getContact() + "</td>");
-				out.print("</tr>");
+				<tr>
+				<td>Country</td>
+				<td>${user.country}</td>
+				</tr>
 				
-				out.print("<tr>");
-				out.print("<td>Country</td>");
-				out.print("<td>" + user.getCountry() + "</td>");
-				out.print("</tr>");
-				
-				out.print("</table>");
-				
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} else {
-				request.setAttribute("Error1", "Plz Do login First");
-		%>
-	<jsp:forward page="index.jsp"></jsp:forward>
-		<%
-		
-		}
-	%>
+				</table>
+	
 </div>	
 </div>

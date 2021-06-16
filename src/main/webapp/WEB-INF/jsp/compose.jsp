@@ -1,3 +1,6 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page isELIgnored="false" %>
 <jsp:include page="header.jsp"></jsp:include>
 		<style>
 			.main{
@@ -41,6 +44,10 @@
 				border-radius: 5px;
 			}
 		</style>
+			<%
+				if(session.getAttribute("usermail")==null)
+					response.sendRedirect("index");
+			%>
 <div class="main">
 	<div class="main-col-1">
 		<h2>Welcome to Mailservices!</h2>
@@ -52,42 +59,23 @@
 	<div class="main-col-2">
 		<div>
 		</div>
-		<h4>Compose Message</h4> <form action="composeEmail" method="post" >
-			<table>
-	
-			<% 
-			
-		if(session.getAttribute("username")!=null){
-		String username=(String)session.getAttribute("username");		
-		out.print("<font style='color:navy'>Welcome "+username+"</font>");
-		out.print("<tr><td>From : <input type='text' style='border: none;' name="+username+" value="+username+" readonly/><br/></td></tr>");
-		}
-		else{
-		request.setAttribute("Error1","Plz Do login First");
-		%>
-		<jsp:forward page="index.jsp"></jsp:forward>
-			<%}
-		%>
-		<% 
-		if(request.getAttribute("compose")!=null){
-		String compose= (String)request.getAttribute("compose");
-		out.print("<font style='color:navy'>"+compose+"</font>");
-		}
-		if(request.getAttribute("composeerr")!=null){
-		String composeerr= (String)request.getAttribute("composeerr");
-		out.print("<font style='color:navy'>"+composeerr+"</font>");
-		}
-		%>
-		
-	 <tr><td>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <input type="text" name="reciever_id"/><br/></td></tr>
+		<h4>Compose Message</h4> 
+		<form:form action="composeEmail" method="post" modelAttribute="mail" >
+			<table> 
+		 
+		 <tr><td>From&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;${mail.sender} <form:hidden path="sender" /><br/></td></tr>
+		 
+	 <tr><td>To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <form:input path="reciever"/><br/></td></tr>
 	 <tr><td>Subject:<br/></td></tr>
-	 <tr><td><input type="text" name="subject" class="inputBox"></td></tr>
+	 <tr><td><form:input path="subject" class="inputBox"/></td></tr>
 	 <tr><td>Message:<br/></td></tr>
 	 
-	 <tr><td><textarea rows="10" cols="80" name="message"></textarea><br/></td></tr>
-	 <tr><td><input class="btn-send"type="submit" value="Send"/>&nbsp;&nbsp;&nbsp;<a class="cancel" href="home.jsp">cancel</a></td></tr>
+	 <tr><td><form:textarea rows="10" cols="80" path="message"/><br/></td></tr>
+	 <tr><td><input class="btn-send"type="submit" value="Send"/>&nbsp;&nbsp;&nbsp;<a class="cancel" href="home">cancel</a></td></tr>
 	 
-	 </table></form>
+	 </table>
+	 
+	 </form:form>
 						
 										
 	</div>
