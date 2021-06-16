@@ -29,6 +29,9 @@ public class SentBoxModel {
 	public SentBoxModel() {
 		// TODO Auto-generated constructor stub
 	}
+	public SentBoxModel(String sender) {
+		this.sender=sender;
+	}
 	@Override
 	public String toString() {
 		return "SentBoxModel [id=" + id + ", reciever=" + reciever + ", sender=" + sender + ", message=" + message

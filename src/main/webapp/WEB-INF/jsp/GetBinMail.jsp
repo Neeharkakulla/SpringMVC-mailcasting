@@ -1,5 +1,8 @@
 		<%@ page import="java.sql.*,com.api.model.*,com.api.service.*,java.text.*"%>  
-			
+			<%
+				if(session.getAttribute("usermail")==null)
+					response.sendRedirect("index");
+			%>	
 			
 		<%  
 		if(request.getAttribute("binmail")!=null){

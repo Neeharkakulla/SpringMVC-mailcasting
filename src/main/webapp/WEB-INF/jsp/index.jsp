@@ -1,4 +1,5 @@
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE HTML>
 
 
@@ -91,36 +92,12 @@
 							
 						</div>
 						<div class="main-col-2">
+						<span style="color:red">${serverMessage}</span>
 										<h3 style="color:#007897;"> Login or Signup</h3><br>
 										<div>
 											
-											<% 
-										if(request.getAttribute("Error")!=null){
-										String Error=(String)request.getAttribute("Error");
-										out.print("<font style='color:red'>"+Error+"</font>");
-										}
-										
-										if(request.getAttribute("Error1")!=null){
-										
-										String Error1=(String)request.getAttribute("Error1");
-										out.print("<font style='color:red'>"+Error1+"</font>");
-										
-										
-										}
-										if(request.getAttribute("register")!=null){
-										String register=(String)request.getAttribute("register");
-										out.print("<font style='color:navy'>"+register+"</font>");
-										}
-										if(request.getAttribute("logout")!=null){
-										String logout=(String)request.getAttribute("logout");
-										out.print("<font style='color:navy'>"+logout+"</font>");
-										} 
-										
-										
-										%>
-										
-										
-				<form action="login" method="post">
+											
+				<form:form action="login" method="post" modelAttribute="user">
 			
 						<table style="table-layout: fixed">
 
@@ -128,16 +105,16 @@
 										<td>Email id :</td>
 									</tr>
 										<tr>
-										<td> <input class="inputBox"  type="text"  name="email"><br></td>
+										<td> <form:input class="inputBox"  path="email"/><br></td>
 										</tr>
 			
 									<tr><td>Password:</td></tr>
-									<tr><td> <input class="inputBox" type="password" name="password"><br></td></tr>
+									<tr><td> <form:password class="inputBox" path="password"/><br></td></tr>
 				
 									<tr><td><br><input class="btn-login" type="submit" value="Sign in">&nbsp; &nbsp; &nbsp;  &nbsp;  &nbsp; 
-										 <a href="Register.jsp" class="btn-signin">Don't have an account?</a> </td></tr>
+										 <a href="register-page" class="btn-signin">Don't have an account?</a> </td></tr>
 						</table>
-				</form>
+				</form:form>
 
 						</div>
 						

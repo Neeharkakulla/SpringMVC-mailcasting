@@ -13,7 +13,10 @@
 		
 	</head>
 	<body>
-	
+		<%
+				if(session.getAttribute("usermail")==null)
+					response.sendRedirect("index");
+			%>
 
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<a class="navbar-brand" href="#">Mail Casting Service</a>
