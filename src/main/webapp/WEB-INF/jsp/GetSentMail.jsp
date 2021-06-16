@@ -1,28 +1,13 @@
-		<%@ page import="java.sql.*,com.api.model.*,com.api.service.*,java.text.*"%>  
-			<%
-				if(session.getAttribute("usermail")==null)
-					response.sendRedirect("index");
-			%>	
-			
-		<%  
-		if(request.getAttribute("sentmail")!=null){
-		SentBoxModel mail=(SentBoxModel)request.getAttribute("sentmail");
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String date=formatter.format(mail.getDate());
-		 
-		out.print("<br><br><br><br>");
-		out.print("<h3>"+mail.getSubject()+"</h3>");
-		out.print("<p>from :"+mail.getSender()+"</p>");
-		out.print("<p>to :"+mail.getReciever()+"</p>");
-		out.print("<p>Date :"+date+"</p>");
-		out.print("<p style='white-space: pre-line' >messsage <br><br>"+mail.getMessage()+"</p>");
-		
-		}
-		else
-			out.print("Error in fetching");
-		
-		  
-		}catch(Exception e){e.printStackTrace();{}  
-		
-		%>  
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page isELIgnored="false" %>
+
+
+		<br><br><br><br>
+		<h3>${ mail.subject}</h3>
+		<p>from : ${ mail.sender}</p>
+		<p>to : ${ mail.reciever} </p>
+		<p>Date : <fmt:formatDate type="both" dateStyle="short" timeStyle="short"  value="${mail.date}" /></p>
+		<p style='white-space: pre-line' >Message <br><br>${ mail.message}</p>
